@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Benjamin Benno Falkner
+  SPDX-License-Identifier: MIT
+-->
+<!-- Semantic task articles stay in light DOM. JavaScript creates the board
+     in shadow DOM; the external CSS only controls pending visibility.
+     All colours come from ./theme.css (--kanban-* tokens). -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>edokanban — Demo</title>
+<link rel="stylesheet" href="../dist/edokanban.css">
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-head">
+      <h1>edokanban</h1>
+      <a class="lang-switch" href="demo_de.html" hreflang="de" lang="de">Deutsch</a>
+    </header>
+    <p class="lead">A Kanban board that explains itself: the four cards below describe how to use it.
+       Try dragging them — the links on the cards jump to the matching section further down this
+       page, without loading a new one.</p>
+
+    <section id="board-en" class="kanban kanban-pending" data-type="kanban" data-columns='["To do", "Doing", "Done"]'>
+      <article data-card="move">
+        <h3>Move a card</h3>
+        <p>Grab a card with the mouse or your finger and drop it into another column. Drop it between two cards to change their order.</p>
+        <a href="#drag">How dragging works ↓</a>
+      </article>
+      <article data-card="details">
+        <h3>Read the details</h3>
+        <p>Cards with a description have an “ⓘ Info” button. Click it to show or hide the text.</p>
+        <a href="#details">About the info button ↓</a>
+      </article>
+      <article data-card="progress">
+        <h3>Your progress is kept</h3>
+        <p>Card positions are saved in your browser. Reload the page and everything stays where you left it.</p>
+        <a href="#progress">Where it is stored ↓</a>
+      </article>
+      <article data-card="own">
+        <h3>Build your own board</h3>
+        <p>Every task is a plain HTML article. Add cards and columns by editing the markup — no JSON, no build step.</p>
+        <a href="#markup">See the markup ↓</a>
+      </article>
+    </section>
+
+    <div class="topics">
+      <section id="drag" class="topic">
+        <h2>Moving cards</h2>
+        <p>Drag with a mouse or with touch. A dashed placeholder shows where the card will land, and the
+           column under the pointer is highlighted. Links and buttons on a card don't start a drag.</p>
+      </section>
+
+      <section id="details" class="topic">
+        <h2>The info button and links</h2>
+        <p>The paragraphs of an article become the card's description, shown with the “ⓘ Info” button. The
+           first link becomes the card's link. Links to a place on the same page — like the ones on these
+           cards — scroll there; any other link opens in a new tab. With a card focused, <code>Enter</code>
+           follows its link.</p>
+      </section>
+
+      <section id="progress" class="topic">
+        <h2>Saved progress</h2>
+        <p>Only card IDs, their column and their order are stored, in your browser's <code>localStorage</code> under the board's <code>id</code> (<code>kanban-state:board-en</code> here). Give every board a unique, stable <code>id</code>.
+           The content is always read fresh from the page. The “Reset” button under the board — or a call to
+           the API — puts every card back into the first column.</p>
+        <pre><code>EdoKanban.reset(document.getElementById('board-en'));</code></pre>
+        <button type="button" class="demo-button" id="reset-btn">Reset board via API</button>
+      </section>
+
+      <section id="markup" class="topic">
+        <h2>The markup</h2>
+        <p>A board is a <code>section</code> with <code>data-type="kanban"</code>. Each direct
+           <code>article[data-card]</code> child is a task: a unique <code>data-card</code> ID, an
+           <code>h3</code> title, optional paragraphs and an optional link. New cards start in the first
+           column; <code>data-columns</code> names the columns.</p>
+        <pre><code>&lt;section id="my-board" class="kanban kanban-pending" data-type="kanban"
+         data-columns='["To do", "Doing", "Done"]'&gt;
+  &lt;article data-card="task-1"&gt;
+    &lt;h3&gt;Write the report&lt;/h3&gt;
+    &lt;p&gt;Outline first, then the draft.&lt;/p&gt;
+    &lt;a href="#report"&gt;Notes ↓&lt;/a&gt;
+  &lt;/article&gt;
+&lt;/section&gt;</code></pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="../dist/edokanban.global.js"></script>
+  <script>
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      EdoKanban.reset(document.getElementById('board-en'));
+    });
+  </script>
+</body>
+</html>

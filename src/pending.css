@@ -1,0 +1,12 @@
+/*
+ * Copyright (c) 2026 Benjamin Benno Falkner
+ * SPDX-License-Identifier: MIT
+ */
+
+/* Load before the board markup to prevent a flash of the plain task list.
+   With scripting disabled, the semantic HTML remains visible. */
+@media (scripting: enabled) {
+  .kanban-pending {
+    visibility: hidden;
+  }
+}

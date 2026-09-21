@@ -1,0 +1,167 @@
+/*
+ * Copyright (c) 2026 Benjamin Benno Falkner
+ * SPDX-License-Identifier: MIT
+ */
+
+/*
+ * Optional theme file for the edokanban demos — the single place where
+ * colours are defined. The widget's own (shadow DOM) stylesheet is
+ * structural only and reads every value from the --kanban-* tokens below,
+ * falling back to the same light defaults if this file isn't loaded.
+ * Custom properties pierce the shadow boundary, so nothing here needs to
+ * know about the widget's internal structure.
+ *
+ * Part 1 — widget tokens (copy just this part into your own site).
+ * Part 2 — a minimal page theme, only there to make the demo pages look
+ *          tidy; it has nothing to do with the widget.
+ */
+
+/* ---------------------------------------------------------------------
+ * 1. Widget tokens (values shown are the built-in defaults)
+ * ------------------------------------------------------------------- */
+:root {
+  --kanban-font: system-ui, -apple-system, sans-serif;
+
+  /* Accent: focus rings, links, drop target, expanded info button. */
+  --kanban-accent: #2563eb;
+  --kanban-accent-contrast: #ffffff;   /* text on an accent background */
+
+  /* Surfaces */
+  --kanban-col-bg: #f4f5f7;
+  --kanban-card-bg: #ffffff;
+  --kanban-card-border: rgba(0, 0, 0, 0.04);
+  --kanban-btn-bg: #ffffff;            /* info button */
+  --kanban-btn-hover-bg: #f0f1f3;
+  --kanban-ghost-bg: rgba(148, 163, 184, 0.1);   /* drop placeholder */
+
+  /* Column accent (top border), by column position. Five are predefined,
+     which is plenty for most boards; a sixth column or more has no accent
+     until you define it yourself, e.g. --kanban-color-6: #14b8a6; */
+  --kanban-color-1: #94a3b8;
+  --kanban-color-2: #f59e0b;
+  --kanban-color-3: #3b82f6;
+  --kanban-color-4: #22c55e;
+  --kanban-color-5: #a855f7;
+
+  /* Text and lines */
+  --kanban-text: #1a1a1a;              /* column and card titles */
+  --kanban-text-secondary: #5b5f66;    /* descriptions, info button */
+  --kanban-text-muted: #8a8f98;        /* counters, reset button, empty column */
+  --kanban-border: #d5d8dd;            /* info button, description divider, drop placeholder */
+  --kanban-error: #b42318;
+
+  /* Elevation */
+  --kanban-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --kanban-drag-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+  /* Layout (optional): minimum column width before the board scrolls sideways.
+  --kanban-column-min-width: 160px; */
+}
+
+/* Dark variant: only the tokens that differ. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kanban-accent: #60a5fa;
+    --kanban-accent-contrast: #0b1220;
+    --kanban-col-bg: #1e2127;
+    --kanban-card-bg: #2a2e36;
+    --kanban-card-border: rgba(255, 255, 255, 0.06);
+    --kanban-btn-bg: #2a2e36;
+    --kanban-btn-hover-bg: #363b45;
+    --kanban-ghost-bg: rgba(148, 163, 184, 0.12);
+    --kanban-text: #e8eaed;
+    --kanban-text-secondary: #b4b9c2;
+    --kanban-text-muted: #8b919b;
+    --kanban-border: #454b56;
+    --kanban-error: #f97066;
+    --kanban-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --kanban-drag-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ---------------------------------------------------------------------
+ * 2. Demo page theme
+ * ------------------------------------------------------------------- */
+:root {
+  color-scheme: light dark;
+  --page-bg: #ffffff;
+  --page-text: #1a1a1a;
+  --page-muted: #5b5f66;
+  --page-rule: #e2e4e8;
+  --page-code-bg: #f4f5f7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #15171b;
+    --page-text: #e8eaed;
+    --page-muted: #a3a9b3;
+    --page-rule: #33373f;
+    --page-code-bg: #1e2127;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--page-text);
+  font: 1rem/1.6 var(--kanban-font);
+}
+
+.page {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 0.5rem; }
+h2 { font-size: 1.15rem; margin: 0 0 0.4rem; }
+p  { margin: 0 0 0.75rem; }
+
+.lead { color: var(--page-muted); margin-bottom: 1.5rem; }
+
+a { color: var(--kanban-accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--kanban-accent); outline-offset: 2px; }
+
+.lang-switch { font-size: 0.85rem; }
+
+/* Sections the board's cards link to. :target highlights the one that was
+ * just jumped to, so it's obvious the link worked without leaving the page. */
+.topics { margin-top: 2.5rem; }
+.topic {
+  padding: 1rem 0 1rem 1rem;
+  border-left: 3px solid var(--page-rule);
+  margin-bottom: 1rem;
+  scroll-margin-top: 1rem;
+}
+.topic:target { border-left-color: var(--kanban-accent); }
+
+pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
+code { background: var(--page-code-bg); padding: 0.1em 0.35em; border-radius: 4px; }
+pre {
+  background: var(--page-code-bg);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0.5rem 0 0.75rem;
+}
+pre code { background: none; padding: 0; }
+
+.demo-button {
+  font: inherit;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--kanban-border);
+  background: var(--kanban-btn-bg);
+  color: var(--kanban-text);
+  cursor: pointer;
+}
+.demo-button:hover { background: var(--kanban-btn-hover-bg); }

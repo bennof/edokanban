@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Benjamin Benno Falkner
+  SPDX-License-Identifier: MIT
+-->
+<!-- Semantische Aufgaben-Artikel bleiben im Light DOM. JavaScript baut das
+     Board im Shadow DOM auf; das externe CSS steuert nur die Sichtbarkeit
+     vor der Initialisierung. Alle Farben kommen aus ./theme.css
+     (--kanban-*-Tokens). -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>edokanban — Demo</title>
+<link rel="stylesheet" href="../dist/edokanban.css">
+<link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-head">
+      <h1>edokanban</h1>
+      <a class="lang-switch" href="demo.html" hreflang="en" lang="en">English</a>
+    </header>
+    <p class="lead">Ein Kanban-Board, das sich selbst erklärt: Die vier Karten unten beschreiben, wie es
+       benutzt wird. Verschiebe sie ruhig — die Links auf den Karten springen zum passenden Abschnitt
+       weiter unten auf dieser Seite, ohne eine neue zu laden.</p>
+
+    <section id="board-de" class="kanban kanban-pending" data-type="kanban" data-columns='["Offen", "In Arbeit", "Erledigt"]'>
+      <article data-card="move">
+        <h3>Karte verschieben</h3>
+        <p>Greife eine Karte mit der Maus oder dem Finger und lege sie in einer anderen Spalte ab. Zwischen zwei Karten abgelegt, ändert sich ihre Reihenfolge.</p>
+        <a href="#drag">So funktioniert das Ziehen ↓</a>
+      </article>
+      <article data-card="details">
+        <h3>Details lesen</h3>
+        <p>Karten mit Beschreibung haben einen „ⓘ Info“-Button. Ein Klick blendet den Text ein oder aus.</p>
+        <a href="#details">Zum Info-Button ↓</a>
+      </article>
+      <article data-card="progress">
+        <h3>Dein Fortschritt bleibt erhalten</h3>
+        <p>Die Positionen der Karten werden in deinem Browser gespeichert. Lade die Seite neu, und alles bleibt, wo du es hingelegt hast.</p>
+        <a href="#progress">Wo es gespeichert wird ↓</a>
+      </article>
+      <article data-card="own">
+        <h3>Eigenes Board bauen</h3>
+        <p>Jede Aufgabe ist ein einfacher HTML-Artikel. Karten und Spalten entstehen durch Bearbeiten des Markups — ohne JSON, ohne Build-Schritt.</p>
+        <a href="#markup">Zum Markup ↓</a>
+      </article>
+    </section>
+
+    <div class="topics">
+      <section id="drag" class="topic">
+        <h2>Karten verschieben</h2>
+        <p>Ziehe mit der Maus oder per Touch. Ein gestrichelter Platzhalter zeigt, wo die Karte landet,
+           und die Spalte unter dem Zeiger wird hervorgehoben. Links und Buttons auf einer Karte starten
+           kein Ziehen.</p>
+      </section>
+
+      <section id="details" class="topic">
+        <h2>Info-Button und Links</h2>
+        <p>Die Absätze eines Artikels werden zur Beschreibung der Karte und über den „ⓘ Info“-Button
+           angezeigt. Der erste Link wird zum Link der Karte. Links auf eine Stelle derselben Seite — wie
+           die auf diesen Karten — scrollen dorthin; alle anderen Links öffnen in einem neuen Tab. Ist eine
+           Karte fokussiert, folgt <code>Enter</code> ihrem Link.</p>
+      </section>
+
+      <section id="progress" class="topic">
+        <h2>Gespeicherter Fortschritt</h2>
+        <p>Gespeichert werden nur Karten-IDs, ihre Spalte und ihre Reihenfolge — im <code>localStorage</code>
+           deines Browsers, unter der <code>id</code> des Boards (hier <code>kanban-state:board-de</code>). Gib jedem Board eine
+           eindeutige, stabile <code>id</code>. Der Inhalt wird immer frisch aus der Seite gelesen. Der Button „Zurücksetzen“
+           unter dem Board — oder ein Aufruf der API — legt alle Karten zurück in die erste Spalte.</p>
+        <pre><code>EdoKanban.reset(document.getElementById('board-de'));</code></pre>
+        <button type="button" class="demo-button" id="reset-btn">Board per API zurücksetzen</button>
+      </section>
+
+      <section id="markup" class="topic">
+        <h2>Das Markup</h2>
+        <p>Ein Board ist ein <code>section</code> mit <code>data-type="kanban"</code>. Jedes direkte
+           <code>article[data-card]</code>-Kind ist eine Aufgabe: eine eindeutige <code>data-card</code>-ID,
+           ein <code>h3</code> als Titel, optionale Absätze und ein optionaler Link. Neue Karten starten in
+           der ersten Spalte; <code>data-columns</code> benennt die Spalten.</p>
+        <pre><code>&lt;section id="mein-board" class="kanban kanban-pending" data-type="kanban"
+         data-columns='["Offen", "In Arbeit", "Erledigt"]'&gt;
+  &lt;article data-card="aufgabe-1"&gt;
+    &lt;h3&gt;Bericht schreiben&lt;/h3&gt;
+    &lt;p&gt;Erst die Gliederung, dann der Entwurf.&lt;/p&gt;
+    &lt;a href="#bericht"&gt;Notizen ↓&lt;/a&gt;
+  &lt;/article&gt;
+&lt;/section&gt;</code></pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="../dist/edokanban.global.js"></script>
+  <script>
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      EdoKanban.reset(document.getElementById('board-de'));
+    });
+  </script>
+</body>
+</html>
